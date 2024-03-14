@@ -1,23 +1,23 @@
 #include "game.hpp"
 #include "texture_manager.hpp"
-#include "gameobj.hpp"
 #include "map.hpp"
-#include "ECS.hpp"
 #include "components.hpp"
 
+//Registry -> view = reg.view<COMPONENT(S) -> view.get...
+// or ... Registry -> reg.get
 
 Game::Game() {}
 Game::~Game(){}
 
-Game_obj* player;
-Game_obj* enemy;
 Map* map;
 
 SDL_Renderer* Game::renderer = nullptr;
 
+entt::registry reg;
 
-Manager manager;
-auto& newPlayer(manager.add_entity());
+
+
+auto Player = reg.create();
 
 void Game::init(const char* title, int xpos, int ypos, int w, int h, bool full_screen) {
 	int flags = 0;
@@ -38,13 +38,9 @@ void Game::init(const char* title, int xpos, int ypos, int w, int h, bool full_s
 		is_running = false;
 	}
 
-	player = new Game_obj("C:/Users/angel/Documents/video_game_learn/textures/mario.png");
-	enemy = new Game_obj("C:/Users/angel/Documents/video_game_learn/textures/bowser.png");
 	map = new Map();
-
-	newPlayer.add_component<position_component>();
-	newPlayer.get_component<position_component>().set_position(500, 500);
-	
+	//"C:/Users/angel/Pictures/ugly_art/MC.png"
+	reg.emplace<Sprite>(Player);
 }
 
 void Game::handle_events() {
@@ -62,20 +58,15 @@ void Game::handle_events() {
 
 void Game::update() {
 	count++;
-	player->update(count, count);
-	enemy->update(count * 2, count * 2);
-	manager.update();
-	std::cout << newPlayer.get_component<position_component>().x() << std::endl;
-	std::cout << newPlayer.get_component<position_component>().y() << std::endl;
 }
 
 void Game::render() {
 	SDL_RenderClear(renderer);
-	
+	SDL_Rect destination;
+	destination.h = 100;
+	destination.w = 100;
 	//textures to be renderer
 	map->draw_map();
-	player->render();
-	enemy->render();
 
 	SDL_RenderPresent(renderer);
 }

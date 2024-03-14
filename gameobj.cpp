@@ -14,8 +14,8 @@ void Game_obj::update(int x, int y) {
 
 	destination.x = xpos;
 	destination.y = ypos;
-	destination.w = 100;
-	destination.h = 100;
+	destination.w = 140;
+	destination.h = 140;
 }
 
 void Game_obj::render() {
