@@ -2,24 +2,30 @@
 #define SPRITE_COMPONENT
 
 #include "components.hpp"
+#include "SDL.h"
+#include "texture_manager.hpp"
 
 struct Sprite {
 
-	SDL_Texture* ola;
-	SDL_Rect noc;
+	SDL_Rect src, *des;
+	SDL_Texture *text;
 
-	void init() {
-		std::cout << "ola";
-		ola = texture_manager::init_texture("ss");
-		noc.h = 200;
-		noc.w = 200;
+	void init(SDL_Texture *texture, SDL_Rect &destination, const char* tex, int x, int y, int w, int h) {
+		texture = texture_manager::init_texture(tex);
+		text = texture;
+
+		destination.x = x;
+		destination.y = y;
+
+		destination.h = h;
+		destination.w = w;
+
+		des = &destination;
 	}
 
-	void update(SDL_Renderer* ren) {
-		SDL_RenderCopy(ren, ola, NULL, &noc);
+	void render() {
+		texture_manager::draw(text, src, *des);
 	}
-	int x;
-
 };
 
 
